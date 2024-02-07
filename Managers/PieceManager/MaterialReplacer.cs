@@ -29,7 +29,12 @@ namespace PieceManager
             RugShader,
             GrassShader,
             CustomCreature,
-            UseUnityShader
+            UseUnityShader,
+            ParticlesStandardUnlit2,
+            LegacyShadersParticlesAdditive,
+            CustomLitParticles,
+            Standard,
+            CustomInteriorSide
         }
 
         private static readonly Dictionary<GameObject, bool> ObjectToSwap;
@@ -58,6 +63,7 @@ namespace PieceManager
         }
 
         private static bool hasRun;
+
         [HarmonyPriority(Priority.VeryHigh)]
         private static void ReplaceAllMaterialsWithOriginal()
         {
@@ -124,11 +130,27 @@ namespace PieceManager
                         case ShaderType.CustomCreature:
                             t.shader = Shader.Find("Custom/Creature");
                             break;
+                        case ShaderType.ParticlesStandardUnlit2:
+                            t.shader = Shader.Find("ParticlesStandard Unlit2");
+                            break;
+                        case ShaderType.LegacyShadersParticlesAdditive:
+                            t.shader = Shader.Find("Legacy Shaders/Particles/Additive");
+                            break;
+                        case ShaderType.CustomLitParticles:
+                            t.shader = Shader.Find("Custom/LitParticles");
+                            break;
+                        case ShaderType.Standard:
+                            t.shader = Shader.Find("Standard");
+                            break;
+                        case ShaderType.CustomInteriorSide:
+                            t.shader = Shader.Find("Custom/InteriorSide");
+                            break;
                         case ShaderType.UseUnityShader:
                             if (Shader.Find(name) != null)
                             {
                                 t.shader = Shader.Find(name);
                             }
+
                             break;
                         default:
                             t.shader = Shader.Find("ToonDeferredShading2017");
@@ -136,6 +158,7 @@ namespace PieceManager
                     }
                 }
             }
+
             hasRun = true;
         }
     }

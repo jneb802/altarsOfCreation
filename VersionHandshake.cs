@@ -15,7 +15,8 @@ namespace Altars_of_Creation
         {
             // Register version check call
             Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Registering version RPC handler");
-            peer.m_rpc.Register($"{Altars_of_CreationPlugin.ModName}_VersionCheck", new Action<ZRpc, ZPackage>(RpcHandlers.RPC_Altars_of_Creation_Version));
+            peer.m_rpc.Register($"{Altars_of_CreationPlugin.ModName}_VersionCheck",
+                new Action<ZRpc, ZPackage>(RpcHandlers.RPC_Altars_of_Creation_Version));
 
             // Make calls to check versions
             Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Invoking version check");
@@ -32,14 +33,16 @@ namespace Altars_of_Creation
         {
             if (!__instance.IsServer() || RpcHandlers.ValidatedPeers.Contains(rpc)) return true;
             // Disconnect peer if they didn't send mod version at all
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogWarning($"Peer ({rpc.m_socket.GetHostName()}) never sent version or couldn't due to previous disconnect, disconnecting");
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogWarning(
+                $"Peer ({rpc.m_socket.GetHostName()}) never sent version or couldn't due to previous disconnect, disconnecting");
             rpc.Invoke("Error", 3);
             return false; // Prevent calling underlying method
         }
 
         private static void Postfix(ZNet __instance)
         {
-            ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(), $"{Altars_of_CreationPlugin.ModName}RequestAdminSync",
+            ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(),
+                $"{Altars_of_CreationPlugin.ModName}RequestAdminSync",
                 new ZPackage());
         }
     }
@@ -65,7 +68,8 @@ namespace Altars_of_Creation
         {
             if (!__instance.IsServer()) return;
             // Remove peer from validated list
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo($"Peer ({peer.m_rpc.m_socket.GetHostName()}) disconnected, removing from validated list");
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo(
+                $"Peer ({peer.m_rpc.m_socket.GetHostName()}) disconnected, removing from validated list");
             _ = RpcHandlers.ValidatedPeers.Remove(peer.m_rpc);
         }
     }
@@ -79,14 +83,16 @@ namespace Altars_of_Creation
             string? version = pkg.ReadString();
 
             Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("Version check, local: " +
-                                                                              Altars_of_CreationPlugin.ModVersion +
-                                                                              ",  remote: " + version);
+                                                                      Altars_of_CreationPlugin.ModVersion +
+                                                                      ",  remote: " + version);
             if (version != Altars_of_CreationPlugin.ModVersion)
             {
-                Altars_of_CreationPlugin.ConnectionError = $"{Altars_of_CreationPlugin.ModName} Installed: {Altars_of_CreationPlugin.ModVersion}\n Needed: {version}";
+                Altars_of_CreationPlugin.ConnectionError =
+                    $"{Altars_of_CreationPlugin.ModName} Installed: {Altars_of_CreationPlugin.ModVersion}\n Needed: {version}";
                 if (!ZNet.instance.IsServer()) return;
                 // Different versions - force disconnect client from server
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogWarning($"Peer ({rpc.m_socket.GetHostName()}) has incompatible version, disconnecting...");
+                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogWarning(
+                    $"Peer ({rpc.m_socket.GetHostName()}) has incompatible version, disconnecting...");
                 rpc.Invoke("Error", 3);
             }
             else
