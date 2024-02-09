@@ -5,6 +5,7 @@ using HarmonyLib;
 using Jotunn.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
@@ -37,38 +38,10 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
         }
         AddCustomButtonToInventoryGUI();
     }
-    // This is the method that gets called when the player clicks the button
-    private static void OnOfferingButtonClick()
-    {
-        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Button was clicked!");
-
-        var inventory = container.GetInventory();
-        if (inventory != null)
-        {
-           var tier = CalculateInteriorTier(inventory);
-           if (tier != null)
-           {
-               var customLocation = ZoneManager.Instance.GetCustomLocation("MWL_RuinsCathedral1");
-               
-               if (customLocation != null)
-               {
-                   var customLocationGameObject = customLocation.Prefab;
-
-                   var interiorContainers = WarpLootManager.GetInteriorContainers(customLocationGameObject);
-                   WarpLootManager.UpdateInteriorContainerTier(interiorContainers, tier);
-                   
-                   var interiorCreatureSpawnerList = WarpCreatureManager.GetInteriorCreatureSpawners(customLocationGameObject);
-                   WarpCreatureManager.UpdateCreaturesLevel(interiorCreatureSpawnerList, tier);
-
-                   MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Offering Accepted");
-               }
-           }
-        }
-    }
-
+    
     private static int CalculateInteriorTier(Inventory inventory)
     {
-        int tier = 1;
+        int tier = -1;
         if (inventory.NrOfItems() > 0)
         {
             var itemInContainer = inventory.GetItem(0);
@@ -114,9 +87,47 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
         }
         else
         {
+            
             MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Offering insufficient."); 
         }
         return tier;
+    }
+    
+    private static void OnOfferingButtonClick()
+    {
+        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Button was clicked!");
+
+        var inventory = container.GetInventory();
+        if (inventory == null)
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Inventory is null");
+            return;
+        }
+
+        var tier = CalculateInteriorTier(inventory);
+        if (tier == -1)
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("No items added to the offering container");
+            return;
+        }
+        
+        var interiorCreatureSpawnerList = WarpCreatureManager.GetSceneInteriorCreatureSpawners();
+        if (interiorCreatureSpawnerList.Count == 0)
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to get interior creature spawners");
+            return;
+        }
+        WarpCreatureManager.UpdateCreaturesLevel(interiorCreatureSpawnerList, tier);
+        
+        var interiorContainerList = WarpLootManager.GetSceneInteriorContainers();
+        if (interiorContainerList.Count == 0)
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to get interior creature spawners");
+            return;
+        }
+        WarpLootManager.UpdateInteriorContainerTier(interiorContainerList, tier);
+
+        MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Offering Accepted");
     }
     
     public string GetHoverText()

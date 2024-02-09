@@ -1,18 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using Jotunn;
 using Jotunn.Entities;
 using Jotunn.Managers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Altars_of_Creation;
 
-public class WarpLootManager
+public class WarpLootManager: MonoBehaviour
 {
     
     public static List<string> meadowsLoot2 = new List<string> { "FineWood", "Bronze", "CopperOre", "Coins" };
     public static List<string> interiorLoot1 = new List<string> { "Copper", "Tin", "Ruby"};
-    public static List<string> interiorLoot2 = new List<string> { "Copper", "Bronze", "Surtling Core"};
-    public static List<string> interiorLoot3 = new List<string> { "Bronze", "Iron Scrap", "Surtling Core" };
+    public static List<string> interiorLoot2 = new List<string> { "Copper", "Bronze", "SurtlingCore"};
+    public static List<string> interiorLoot3 = new List<string> { "Bronze", "IronScrap", "SurtlingCore" };
     
     public static DropTable CreateDropTable(List<string> itemNames, int dropMin, int dropMax)
         {
@@ -25,7 +27,6 @@ public class WarpLootManager
 
             foreach (var itemName in itemNames)
             {
-                // Use Jotunn's PrefabManager to get the prefab for the item
                 GameObject itemPrefab = PrefabManager.Cache.GetPrefab<GameObject>(itemName);
 
                 if (itemPrefab != null)
@@ -93,21 +94,30 @@ public class WarpLootManager
             }
         }
         
-        public static List<Container> GetInteriorContainers(GameObject location)
+        public static List<Container> GetSceneInteriorContainers()
         {
             List<Container> locationInteriorContainers = new List<Container>();
         
-            Container[] allContainers = location.FindDeepChild("Unity").GetComponentsInChildren<Container>();
+            var allSceneObjects = SceneManager.GetActiveScene().GetRootGameObjects();
         
-            foreach (var container in allContainers)
+            foreach (var rootObject in allSceneObjects)
             {
-                if (container.transform.parent != null && container.transform.parent.position.y >= 5000)
+                if (rootObject.name.StartsWith("loot_chest_wood_interior") && rootObject.transform.position.y >= 5000)
                 {
-                    locationInteriorContainers.Add(container);
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Interior container spawner found in " + location + " with name: " + container.transform.parent.name);
-
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
+                    Container container = rootObject.GetComponent<Container>();
+                    if (container != null)
+                    {
+                        locationInteriorContainers.Add(container);
+                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found container with name: " + container);
+                    }
+                    else
+                    {
+                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the container from object with name: " + rootObject);
+                    }
                 }
             }
+
             return locationInteriorContainers;
         }
 
@@ -133,7 +143,11 @@ public class WarpLootManager
             foreach (var container in containers)
             {
                 var dropTable = container.m_defaultItems;
-
+                
+                dropTable.m_oneOfEach = true;
+                dropTable.m_dropMin = 3;
+                dropTable.m_dropMax = 3;
+                
                 foreach (var itemName in itemNames)
                 {
 
@@ -147,9 +161,9 @@ public class WarpLootManager
                             m_stackMin = 5,
                             m_stackMax = 6,
                             m_weight = 1.0f,
-                            m_dontScale = false
+                            m_dontScale = false 
                         };
-
+                        
                         dropTable.m_drops.Add(dropData);
                     }
                     else

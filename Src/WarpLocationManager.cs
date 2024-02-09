@@ -73,9 +73,7 @@ public class WarpLocationManager
         DropTable Cathedral1DropTable = WarpLootManager.CreateDropTable(WarpLootManager.meadowsLoot2, 2, 3);
         WarpLootManager.AddContainerToChild(WarpAssetManager.MWL_RuinsCathedral1_GameObject.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood1", Cathedral1DropTable);
         WarpLootManager.AddContainerToChild(WarpAssetManager.MWL_RuinsCathedral1_GameObject.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood2", Cathedral1DropTable);
-        DropTable Cathedral1InteriorDropTable = WarpLootManager.CreateDropTable(WarpLootManager.meadowsLoot2, 2, 3);
-        WarpLootManager.AddContainerToChild(WarpAssetManager.MWL_RuinsCathedral1_GameObject.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood_interior1", Cathedral1InteriorDropTable);
-
+        
         WarpLootManager.AddOfferingManagerToChildContainer(WarpAssetManager.MWL_RuinsCathedral1_GameObject.gameObject.transform.FindDeepChild("Unity").gameObject, "offeringBox");
 
         // All the items have correct materials and destruction effects (except chests) when I use only the ShaderSwap. So it seems that ShaderSwap will also swap materials.
@@ -91,7 +89,7 @@ public class WarpLocationManager
                     Biome = Heightmap.Biome.Meadows,
                     Quantity = 20,
                     Priotized = true,
-                    ExteriorRadius = 50,
+                    ExteriorRadius = 75,
                     ClearArea = true,
                     RandomRotation = false,
                     Group = "Ruins_large",

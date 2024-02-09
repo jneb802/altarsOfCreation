@@ -8,10 +8,11 @@ using Jotunn.Managers;
 using UnityEngine;
 using YamlDotNet.RepresentationModel;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 namespace Altars_of_Creation;
 
-public class WarpCreatureManager
+public class WarpCreatureManager: MonoBehaviour
 {
     public static GameObject GetCreaturePrefab(string prefabName)
     {   
@@ -35,7 +36,7 @@ public class WarpCreatureManager
         
         foreach (var spawner in allSpawners)
         {
-            if (spawner.transform.parent != null && spawner.transform.parent.position.y <= 5000)
+            if (spawner.transform.parent != null && spawner.transform.position.y <= 5000)
             {
                 locationExteriorSpawners.Add(spawner);
                 Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Exterior creature spawner found in " + location + "with name: " + spawner.transform.parent.name);
@@ -50,14 +51,40 @@ public class WarpCreatureManager
         List<CreatureSpawner> locationInteriorSpawners = new List<CreatureSpawner>();
         
         CreatureSpawner[] allSpawners = location.GetComponentsInChildren<CreatureSpawner>();
-        
+
         foreach (var spawner in allSpawners)
         {
-            if (spawner.transform.parent != null && spawner.transform.parent.position.y >= 5000)
+            if (spawner.transform.parent != null && spawner.transform.position.y >= 5000)
             {
                 locationInteriorSpawners.Add(spawner);
                 Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Interior creature spawner found in " + location + " with name: " + spawner.transform.parent.name);
+            }
+        }
 
+        return locationInteriorSpawners;
+    }
+    
+    public static List<CreatureSpawner> GetSceneInteriorCreatureSpawners()
+    {
+        List<CreatureSpawner> locationInteriorSpawners = new List<CreatureSpawner>();
+        
+        var allSceneObjects = SceneManager.GetActiveScene().GetRootGameObjects();
+        
+        foreach (var rootObject in allSceneObjects)
+        {
+            if (rootObject.name.StartsWith("MWL_RuinsCathedral1_Interior_Spawner") && rootObject.transform.position.y >= 5000 && !locationInteriorSpawners.Any(spawner => spawner.gameObject.name == rootObject.name))
+            {
+                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
+                CreatureSpawner spawner = rootObject.GetComponent<CreatureSpawner>();
+                if (spawner != null)
+                {
+                    locationInteriorSpawners.Add(spawner);
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found interior creature spawner with name: " + spawner);
+                }
+                else
+                {
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the creature spawner from object with name: " + rootObject);
+                }
             }
         }
 
@@ -140,8 +167,9 @@ public class WarpCreatureManager
         foreach (var spawner in creatureSpawners)
         {
             spawner.m_minLevel = minLevel;
-            spawner.Awake();
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Creature spawner added to " + spawner.name + " with level =" + minLevel);
+            spawner.m_maxLevel = minLevel;
+            spawner.Spawn();
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Creature spawner with name: " + spawner.name + " changed to level = " + minLevel);
         }
     }
 }

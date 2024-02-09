@@ -63,9 +63,7 @@ namespace Altars_of_Creation
             }
 
             PrefabManager.OnVanillaPrefabsAvailable += OnPrefabsAvailable;
-
-             
-
+            
         }
         
         private void OnPrefabsAvailable()
