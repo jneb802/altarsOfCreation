@@ -7,6 +7,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
+using Jotunn.Configs;
 using ServerSync;
 using UnityEngine;
 using Jotunn.Entities;
@@ -19,7 +20,7 @@ namespace Altars_of_Creation
     [BepInPlugin(ModGUID, ModName, ModVersion)]
     public class Altars_of_CreationPlugin : BaseUnityPlugin
     {
-        internal const string ModName = "Altars_of_Creation";
+        internal const string ModName = "MWL_Altars_of_Creation";
         internal const string ModVersion = "1.0.0";
         internal const string Author = "warpalicious";
         private const string ModGUID = Author + "." + ModName;
@@ -33,6 +34,9 @@ namespace Altars_of_Creation
 
         private static readonly ConfigSync ConfigSync = new(ModGUID)
             { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
+        
+        
+        public static ConfigEntry<int> MWL_RuinsCathedral1_Quantity_Config = null!;
         
         public enum Toggle
         {
@@ -62,18 +66,14 @@ namespace Altars_of_Creation
                 Config.Save();
             }
 
-            PrefabManager.OnVanillaPrefabsAvailable += OnPrefabsAvailable;
-            
-        }
-        
-        private void OnPrefabsAvailable()
-        {
-            
             WarpAssetManager.LoadAssets();
-            WarpLocationManager.AddLocation_MWL_RuinsCathedral1();
             WarpItemManager.CreateChurchKey();
+            WarpTextManager.AddlocalizationsEnglish();
             
-            PrefabManager.OnVanillaPrefabsAvailable -= OnPrefabsAvailable;
+            ZoneManager.OnVanillaLocationsAvailable += WarpLocationManager.AddLocation_MWL_RuinsCathedral1;
+            
+            MWL_RuinsCathedral1_Quantity_Config = config("1 - Location Spawn Quantities", "MWL_RuinsCathedral1", 10, "Amount of this location the game will attempt to place during world generation");
+            
         }
 
         private void OnDestroy()
@@ -157,6 +157,9 @@ namespace Altars_of_Creation
         }
 
         #endregion
+        
+        
+        
     }
 
     public static class KeyboardExtensions

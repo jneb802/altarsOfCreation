@@ -126,6 +126,7 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
             return;
         }
         WarpLootManager.UpdateInteriorContainerTier(interiorContainerList, tier);
+        WarpLootManager.ShrinkChests(interiorContainerList,tier);
 
         MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Offering Accepted");
     }

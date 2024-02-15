@@ -85,7 +85,7 @@ public class WarpLootManager: MonoBehaviour
             if (childTransform != null)
             {
                 childTransform.gameObject.AddComponent<WarpAltarManager>();
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("Successfully added the Container component to " + childName);
+                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Successfully added the Container component to " + childName);
             }
             else
             {
@@ -177,4 +177,46 @@ public class WarpLootManager: MonoBehaviour
 
             }
         }
+        
+        public static void ShrinkChests(List<Container> containers, int tier)
+        {
+            int chestsToShrink = 2;
+            
+            switch (tier)
+            {
+                case 1:
+                    chestsToShrink = 2;
+                    break;
+                case 2:
+                    chestsToShrink = 1;
+                    break;
+                case 3:
+                    chestsToShrink = 0;
+                    break;
+                default:
+                    chestsToShrink = 2;
+                    break;
+            }
+            
+            foreach (var container in containers)
+            {
+                if (chestsToShrink <= 0) break; 
+                if (container.transform != null)
+                {
+                    var parentTransform = container.transform;
+                    var scale = parentTransform.localScale;
+                    scale.x = 0.01f;
+                    scale.y = 0.01f;
+                    scale.z = 0.01f;
+                    parentTransform.localScale = scale;
+                    chestsToShrink--;
+                }
+                else
+                {
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Parent transform for container not found");
+                }
+            }
+            
+        }
+        
 }

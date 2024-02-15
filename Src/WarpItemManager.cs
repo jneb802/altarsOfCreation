@@ -12,7 +12,7 @@ public class WarpItemManager
         // Create and add a custom item
         ItemConfig keyConfig = new ItemConfig();
         keyConfig.Amount = 1;
-
+        
         // Prefab did not use mocked refs so no need to fix them
         var churchKeyItem = new CustomItem(WarpAssetManager.mwl_tyggrason_bundle, "ChurchKey", fixReference: false, keyConfig);
         ItemManager.Instance.AddItem(churchKeyItem);
