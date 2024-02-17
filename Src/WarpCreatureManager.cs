@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using HarmonyLib;
 using Jotunn;
 using Jotunn.Entities;
 using Jotunn.Managers;
@@ -161,15 +162,18 @@ public class WarpCreatureManager: MonoBehaviour
             creatureIndex++;
         }
     }
-    
+       
     public static void UpdateCreaturesLevel(List<CreatureSpawner> creatureSpawners, int minLevel)
     {
         foreach (var spawner in creatureSpawners)
         {
-            spawner.m_minLevel = minLevel;
-            spawner.m_maxLevel = minLevel;
-            spawner.Spawn();
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Creature spawner with name: " + spawner.name + " changed to level = " + minLevel);
+            ZNetView nview = spawner.Spawn();
+            // These checks might be overkill and could be simplified a bit
+            if (!nview || !nview.gameObject || !nview.gameObject.TryGetComponent(out Character character))
+            {
+                continue;
+            }
+            character.SetLevel(minLevel);
         }
     }
 }
