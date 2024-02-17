@@ -127,7 +127,6 @@
         <Compile Include="Src\WarpCreatureManager.cs" />
         <Compile Include="Src\WarpItemManager.cs" />
         <Compile Include="Src\WarpLocationManager.cs" />
-        <Compile Include="Src\WarpLockManager.cs" />
         <Compile Include="Src\WarpLootManager.cs" />
         <Compile Include="Src\WarpTextManager.cs" />
         <Compile Include="VersionHandshake.cs"/>

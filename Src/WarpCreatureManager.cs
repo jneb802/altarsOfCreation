@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace Altars_of_Creation;
 
-public class WarpCreatureManager: MonoBehaviour
+public static class WarpCreatureManager
 {
     public static GameObject GetCreaturePrefab(string prefabName)
     {   
