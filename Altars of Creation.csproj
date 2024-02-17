@@ -137,6 +137,7 @@
     <ItemGroup>
         <Content Include=".gitignore"/>
         <EmbeddedResource Include="assets\mwl_tyggrason" />
+        <Content Include="CreatureLists\LocationInteriorLootList.yml" />
         <Content Include="CreatureLists\LocationsCreatureList.yml" />
         <Content Include="environment.props"/>
         <Content Include="icons\README.txt"/>

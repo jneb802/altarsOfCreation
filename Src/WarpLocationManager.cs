@@ -83,8 +83,9 @@ public class WarpLocationManager
                         MinDistance = 1500,
                         MaxDistance = 5000,
                         InteriorRadius = 64,
-                        InForest = false,
-                        ForestTresholdMin = 1,
+                        InForest = true,
+                        ForestTresholdMin = 1.2f,
+                        ForestTrasholdMax = 2,
                         HasInterior = true,
                         InteriorEnvironment = "Crypt",
                     });
@@ -93,8 +94,8 @@ public class WarpLocationManager
         MWL_RuinsCathedral1_Location.Location.m_applyRandomDamage = false;
         MWL_RuinsCathedral1_Location.Location.m_noBuild = false;
         
-        ClearPrefabCache(typeof(Material));
-        ClearPrefabCache(typeof(Shader));
+        //ClearPrefabCache(typeof(Material));
+        //ClearPrefabCache(typeof(Shader));
         
         ZoneManager.Instance.AddCustomLocation(MWL_RuinsCathedral1_Location);
         

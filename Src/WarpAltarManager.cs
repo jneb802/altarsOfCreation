@@ -20,8 +20,9 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
     //private static Inventory Inventory;
 
     public string offeringItem = "Coins";
-    public int creatureLevelOnePrice = 250;
-    public int creatureLevelTwoPrice = 100;
+    private static int tierOneItemPrice = Altars_of_CreationPlugin.TierOnePrice.Value;
+    private static int tierTwoItemPrice = Altars_of_CreationPlugin.TierTwoPrice.Value;
+    private static int tierThreeItemPrice = Altars_of_CreationPlugin.TierThreePrice.Value;
 
     //public static EffectList altarEffects = new EffectList();
     
@@ -55,17 +56,17 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
                 
                 switch (itemStackSize)
                 {
-                    case 200:
+                    case var _ when itemStackSize == tierOneItemPrice:
                         tier = 1;
                         break;
-                    case 350:
+                    case var _ when itemStackSize == tierTwoItemPrice:
                         tier = 2;
                         break;
-                    case 500:
+                    case var _ when itemStackSize == tierThreeItemPrice:
                         tier = 3;
                         break;
                     default:
-                        tier = 3;
+                        tier = 1; // Consider if you want the default case to be 3 or another value.
                         break;
                 }
                 

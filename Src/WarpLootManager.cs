@@ -145,8 +145,8 @@ public class WarpLootManager: MonoBehaviour
                 var dropTable = container.m_defaultItems;
                 
                 dropTable.m_oneOfEach = true;
-                dropTable.m_dropMin = 3;
-                dropTable.m_dropMax = 3;
+                dropTable.m_dropMin = 1;
+                dropTable.m_dropMax = 1;
                 
                 foreach (var itemName in itemNames)
                 {
@@ -158,8 +158,8 @@ public class WarpLootManager: MonoBehaviour
                         DropTable.DropData dropData = new DropTable.DropData
                         {
                             m_item = itemPrefab,
-                            m_stackMin = 5,
-                            m_stackMax = 6,
+                            m_stackMin = 3,
+                            m_stackMax = 8,
                             m_weight = 1.0f,
                             m_dontScale = false 
                         };

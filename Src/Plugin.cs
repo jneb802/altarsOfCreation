@@ -35,8 +35,10 @@ namespace Altars_of_Creation
         private static readonly ConfigSync ConfigSync = new(ModGUID)
             { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
         
-        
         public static ConfigEntry<int> MWL_RuinsCathedral1_Quantity_Config = null!;
+        public static ConfigEntry<int> TierOnePrice = null!;
+        public static ConfigEntry<int> TierTwoPrice = null!;
+        public static ConfigEntry<int> TierThreePrice = null!;
         
         public enum Toggle
         {
@@ -73,6 +75,9 @@ namespace Altars_of_Creation
             ZoneManager.OnVanillaLocationsAvailable += WarpLocationManager.AddLocation_MWL_RuinsCathedral1;
             
             MWL_RuinsCathedral1_Quantity_Config = config("1 - Location Spawn Quantities", "MWL_RuinsCathedral1", 10, "Amount of this location the game will attempt to place during world generation");
+            TierOnePrice = config("2 - Dungeon Tier Prices", "Tier 1 Price", 200, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 1");
+            TierTwoPrice = config("2 - Dungeon Tier Prices", "Tier 2 Price", 350, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 2");
+            TierThreePrice = config("2 - Dungeon Tier Prices", "Tier 3 Price", 500, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 3");
             
         }
 
