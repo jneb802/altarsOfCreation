@@ -92,9 +92,10 @@ public static class WarpCreatureManager
         return locationInteriorSpawners;
     }
     
-    public static List<string> CreateCreatureList(string filePath, string locationName, int creatureCount)
+    public static List<string> CreateCreatureList(string locationName, int creatureCount)
     {
         List<string> locationCreatureList = new List<string>();
+        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\LocationsCreatureList.yml";
         
         // Read the YAML content from the file
         string yamlContent = File.ReadAllText(filePath);

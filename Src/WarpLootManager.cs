@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Jotunn;
 using Jotunn.Entities;
 using Jotunn.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
 
 namespace Altars_of_Creation;
 
@@ -12,10 +16,53 @@ public class WarpLootManager: MonoBehaviour
 {
     
     public static List<string> meadowsLoot2 = new List<string> { "FineWood", "Bronze", "CopperOre", "Coins" };
-    public static List<string> interiorLoot1 = new List<string> { "Copper", "Tin", "Ruby"};
-    public static List<string> interiorLoot2 = new List<string> { "Copper", "Bronze", "SurtlingCore"};
-    public static List<string> interiorLoot3 = new List<string> { "Bronze", "IronScrap", "SurtlingCore" };
     
+    public static List<string> interiorLoot1;
+    public static List<string> interiorLoot2;
+    public static List<string> interiorLoot3;
+    
+    /*public static List<string> interiorLoot1 = new List<string> { "Copper", "Tin", "Ruby"};
+    public static List<string> interiorLoot2 = new List<string> { "Copper", "Bronze", "SurtlingCore"};
+    public static List<string> interiorLoot3 = new List<string> { "Bronze", "IronScrap", "SurtlingCore" };*/
+    
+    public static List<String> LoadLootConfig(string locationName, string lootListName)
+    {
+        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\LocationLootLists.yml";
+        var yamlContent = File.ReadAllText(filePath);
+        
+        var yaml = new YamlStream();
+        yaml.Load(new StringReader(yamlContent));
+        var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+        
+        List<string> lootList = new List<string>();
+
+        if (mapping.Children.ContainsKey(new YamlScalarNode(locationName)))
+        {
+            var locationNode = mapping.Children[new YamlScalarNode(locationName)] as YamlMappingNode;
+            if (locationNode != null && locationNode.Children.ContainsKey(new YamlScalarNode(lootListName)))
+            {
+                var lootItems = (YamlSequenceNode)locationNode.Children[new YamlScalarNode(lootListName)];
+                foreach (var item in lootItems)
+                {
+                    lootList.Add(((YamlScalarNode)item).Value);
+                }
+            }
+        }
+        else
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to find location with name: " + locationName + " in LocationInteriorLootList");
+        }
+
+        return lootList;
+    }
+
+    public static void RunLootConfigs(string locationName)
+    {
+        interiorLoot1 = LoadLootConfig(locationName, "interiorLootTier1");
+        interiorLoot2 = LoadLootConfig(locationName, "interiorLootTier2");
+        interiorLoot3 = LoadLootConfig(locationName, "interiorLootTier3");
+    }
+
     public static DropTable CreateDropTable(List<string> itemNames, int dropMin, int dropMax)
         {
             DropTable newDropTable = new DropTable
@@ -44,7 +91,7 @@ public class WarpLootManager: MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("Prefab for " + itemName + " not found");
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName + " not found");
                 }
             }
 

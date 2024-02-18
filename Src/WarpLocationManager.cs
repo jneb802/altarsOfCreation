@@ -50,8 +50,13 @@ public class WarpLocationManager
     {
         GameObject MWL_RuinsCathedral1_Container = ZoneManager.Instance.CreateLocationContainer(WarpAssetManager.MWL_RuinsCathedral1_GameObject);
         
-        var exteriorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",7);
-        var interiorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",20);
+        /*var exteriorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",7);
+        var interiorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",20);*/
+        
+        var exteriorCreatureList = WarpCreatureManager.CreateCreatureList("MWL_RuinsCathedral1",7);
+        var interiorCreatureList = WarpCreatureManager.CreateCreatureList("MWL_RuinsCathedral1",20);
+
+        WarpLootManager.RunLootConfigs("MWL_RuinsCathedral1");
         
         var exteriorCreatureSpawnerList = WarpCreatureManager.GetExteriorCreatureSpawners(MWL_RuinsCathedral1_Container);
         var interiorCreatureSpawnerList = WarpCreatureManager.GetInteriorCreatureSpawners(MWL_RuinsCathedral1_Container);
