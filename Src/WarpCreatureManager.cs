@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using BepInEx;
 using HarmonyLib;
 using Jotunn;
 using Jotunn.Entities;
@@ -15,6 +16,9 @@ namespace Altars_of_Creation;
 
 public static class WarpCreatureManager
 {
+    private static string bepinexConfigFolderPath = Paths.ConfigPath;
+    private static string creaturesYAMLFilePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\warpalicious.MWL_Altars_of_Creation_Creatures.yml";
+    
     public static GameObject GetCreaturePrefab(string prefabName)
     {   
         GameObject creaturePrefab = PrefabManager.Cache.GetPrefab<GameObject>(prefabName);
@@ -95,10 +99,19 @@ public static class WarpCreatureManager
     public static List<string> CreateCreatureList(string locationName, int creatureCount)
     {
         List<string> locationCreatureList = new List<string>();
-        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\LocationsCreatureList.yml";
+        
+        if (Altars_of_CreationPlugin.UseCustomLocationCreatureListYAML.Value == Altars_of_CreationPlugin.Toggle.On)
+        {
+            creaturesYAMLFilePath = Path.Combine(bepinexConfigFolderPath, "warpalicious.MWL_Altars_of_Creation_Creatures.yml");
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("Successfully loaded warpalicious.MWL_Altars_of_Creation_Creatures file from BepinEx config folder");
+        }
+        else
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("warpalicious.MWL_Altars_of_Creation_Creatures file was not found in BepinEx config folder");
+        }
         
         // Read the YAML content from the file
-        string yamlContent = File.ReadAllText(filePath);
+        string yamlContent = File.ReadAllText(creaturesYAMLFilePath);
         if (yamlContent != null)
         {
             // Load the YAML stream

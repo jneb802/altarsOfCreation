@@ -39,6 +39,7 @@ namespace Altars_of_Creation
         public static ConfigEntry<int> TierOnePrice = null!;
         public static ConfigEntry<int> TierTwoPrice = null!;
         public static ConfigEntry<int> TierThreePrice = null!;
+        public static ConfigEntry<Toggle> UseCustomLocationCreatureListYAML = null!;
         
         public enum Toggle
         {
@@ -78,6 +79,7 @@ namespace Altars_of_Creation
             TierOnePrice = config("2 - Dungeon Tier Prices", "Tier 1 Price", 200, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 1");
             TierTwoPrice = config("2 - Dungeon Tier Prices", "Tier 2 Price", 350, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 2");
             TierThreePrice = config("2 - Dungeon Tier Prices", "Tier 3 Price", 500, "Amount of offering item (default is coins) the player must offer to trigger dungeon tier 3");
+            UseCustomLocationCreatureListYAML = config("3 - Custom Location Creature List", "Use Custom Location Loot List", Toggle.Off, "When Off, location will spawn default creatures. When On, location will spawn creatures from the MWL_AltarsOfCreation_Creatures.yml file");
             
         }
 

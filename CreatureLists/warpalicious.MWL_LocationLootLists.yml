@@ -11,3 +11,8 @@ MWL_RuinsCathedral1:
     - Bronze
     - IronScrap
     - SurtlingCore
+  exteriorLoot:
+    - FineWood
+    - Bronze
+    - CopperOre
+    - Coins

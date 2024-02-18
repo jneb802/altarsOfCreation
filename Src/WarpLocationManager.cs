@@ -50,9 +50,6 @@ public class WarpLocationManager
     {
         GameObject MWL_RuinsCathedral1_Container = ZoneManager.Instance.CreateLocationContainer(WarpAssetManager.MWL_RuinsCathedral1_GameObject);
         
-        /*var exteriorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",7);
-        var interiorCreatureList = WarpCreatureManager.CreateCreatureList(@"C:\Users\jneb8\RiderProjects\Altars of Creation\CreatureLists\LocationsCreatureList.yml","MWL_RuinsCathedral1",20);*/
-        
         var exteriorCreatureList = WarpCreatureManager.CreateCreatureList("MWL_RuinsCathedral1",7);
         var interiorCreatureList = WarpCreatureManager.CreateCreatureList("MWL_RuinsCathedral1",20);
 
@@ -64,7 +61,7 @@ public class WarpLocationManager
         WarpCreatureManager.AddCreaturestoSpawnerList(exteriorCreatureSpawnerList,exteriorCreatureList);
         WarpCreatureManager.AddCreaturestoSpawnerList(interiorCreatureSpawnerList,interiorCreatureList);
         
-        DropTable Cathedral1DropTable = WarpLootManager.CreateDropTable(WarpLootManager.meadowsLoot2, 2, 3);
+        DropTable Cathedral1DropTable = WarpLootManager.CreateDropTable(WarpLootManager.exteriorLoot, 2, 3);
         WarpLootManager.AddContainerToChild(MWL_RuinsCathedral1_Container.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood1", Cathedral1DropTable);
         WarpLootManager.AddContainerToChild(MWL_RuinsCathedral1_Container.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood2", Cathedral1DropTable);
         WarpLootManager.AddContainerToChild(MWL_RuinsCathedral1_Container.gameObject.transform.FindDeepChild("Unity").gameObject, "loot_chest_wood3", Cathedral1DropTable);

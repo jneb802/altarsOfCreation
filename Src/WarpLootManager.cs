@@ -14,20 +14,14 @@ namespace Altars_of_Creation;
 
 public class WarpLootManager: MonoBehaviour
 {
-    
-    public static List<string> meadowsLoot2 = new List<string> { "FineWood", "Bronze", "CopperOre", "Coins" };
-    
+    public static List<string> exteriorLoot;
     public static List<string> interiorLoot1;
     public static List<string> interiorLoot2;
     public static List<string> interiorLoot3;
     
-    /*public static List<string> interiorLoot1 = new List<string> { "Copper", "Tin", "Ruby"};
-    public static List<string> interiorLoot2 = new List<string> { "Copper", "Bronze", "SurtlingCore"};
-    public static List<string> interiorLoot3 = new List<string> { "Bronze", "IronScrap", "SurtlingCore" };*/
-    
     public static List<String> LoadLootConfig(string locationName, string lootListName)
     {
-        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\LocationLootLists.yml";
+        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\warpalicious.MWL_LocationLootLists.yml";
         var yamlContent = File.ReadAllText(filePath);
         
         var yaml = new YamlStream();
@@ -58,6 +52,7 @@ public class WarpLootManager: MonoBehaviour
 
     public static void RunLootConfigs(string locationName)
     {
+        exteriorLoot = LoadLootConfig(locationName, "exteriorLoot");
         interiorLoot1 = LoadLootConfig(locationName, "interiorLootTier1");
         interiorLoot2 = LoadLootConfig(locationName, "interiorLootTier2");
         interiorLoot3 = LoadLootConfig(locationName, "interiorLootTier3");

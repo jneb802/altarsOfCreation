@@ -137,8 +137,8 @@
     <ItemGroup>
         <Content Include=".gitignore"/>
         <EmbeddedResource Include="assets\mwl_tyggrason" />
-        <Content Include="CreatureLists\LocationLootLists.yml" />
-        <Content Include="CreatureLists\LocationsCreatureList.yml" />
+        <Content Include="CreatureLists\warpalicious.MWL_LocationLootLists.yml" />
+        <Content Include="CreatureLists\warpalicious.MWL_Altars_of_Creation_Creatures.yml" />
         <Content Include="environment.props"/>
         <Content Include="icons\README.txt"/>
         <Content Include="ILRepack.targets"/>
