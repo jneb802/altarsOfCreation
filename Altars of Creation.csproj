@@ -120,13 +120,17 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="OldCode\Plugin.cs" />
+        <Compile Include="OldCode\WarpAltarManager.cs" />
+        <Compile Include="OldCode\WarpCreatureManager.cs" />
+        <Compile Include="OldCode\WarpLocationManager.cs" />
+        <Compile Include="OldCode\WarpLootManager.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Src\Plugin.cs" />
         <Compile Include="Src\WarpAltarManager.cs" />
         <Compile Include="Src\WarpAssetManager.cs" />
         <Compile Include="Src\WarpCreatureManager.cs" />
         <Compile Include="Src\WarpItemManager.cs" />
-        <Compile Include="Src\WarpLocationManager.cs" />
         <Compile Include="Src\WarpLootManager.cs" />
         <Compile Include="Src\WarpTextManager.cs" />
         <Compile Include="VersionHandshake.cs"/>
@@ -137,8 +141,8 @@
     <ItemGroup>
         <Content Include=".gitignore"/>
         <EmbeddedResource Include="assets\mwl_tyggrason" />
-        <Content Include="CreatureLists\warpalicious.MWL_LocationLootLists.yml" />
-        <Content Include="CreatureLists\warpalicious.MWL_Altars_of_Creation_Creatures.yml" />
+        <EmbeddedResource Include="CreatureLists\warpalicious.MWL_Altars_of_Creation_LootLists.yml" />
+        <EmbeddedResource Include="CreatureLists\warpalicious.MWL_Altars_of_Creation_Creatures.yml" />
         <Content Include="environment.props"/>
         <Content Include="icons\README.txt"/>
         <Content Include="ILRepack.targets"/>

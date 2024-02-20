@@ -15,14 +15,10 @@ namespace Altars_of_Creation;
 public class WarpLootManager: MonoBehaviour
 {
     public static List<string> exteriorLoot;
-    public static List<string> interiorLoot1;
-    public static List<string> interiorLoot2;
-    public static List<string> interiorLoot3;
     
-    public static List<String> LoadLootConfig(string locationName, string lootListName)
+    public static List<String> LoadLootConfig(string locationName, string lootListName, string yamlContent)
     {
-        var filePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\warpalicious.MWL_LocationLootLists.yml";
-        var yamlContent = File.ReadAllText(filePath);
+        //var yamlContent = File.ReadAllText(filePath);
         
         var yaml = new YamlStream();
         yaml.Load(new StringReader(yamlContent));
@@ -44,18 +40,10 @@ public class WarpLootManager: MonoBehaviour
         }
         else
         {
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to find location with name: " + locationName + " in LocationInteriorLootList");
+            //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to find location with name: " + locationName + " in LocationInteriorLootList");
         }
 
         return lootList;
-    }
-
-    public static void RunLootConfigs(string locationName)
-    {
-        exteriorLoot = LoadLootConfig(locationName, "exteriorLoot");
-        interiorLoot1 = LoadLootConfig(locationName, "interiorLootTier1");
-        interiorLoot2 = LoadLootConfig(locationName, "interiorLootTier2");
-        interiorLoot3 = LoadLootConfig(locationName, "interiorLootTier3");
     }
 
     public static DropTable CreateDropTable(List<string> itemNames, int dropMin, int dropMax)
@@ -86,7 +74,7 @@ public class WarpLootManager: MonoBehaviour
                 }
                 else
                 {
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName + " not found");
+                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName + " not found");
                 }
             }
 
@@ -114,25 +102,7 @@ public class WarpLootManager: MonoBehaviour
             }
             else
             {
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName + ") not found in parent GameObject (" + parentGameObject + ")");
-            }
-        }
-        
-        public static void AddOfferingManagerToChildContainer(GameObject parentGameObject, string childName)
-        {
-            // Find the child GameObject by name
-            Transform childTransform = parentGameObject.transform.Find(childName);
-
-            // Check if the child was found
-            if (childTransform != null)
-            {
-                childTransform.gameObject.AddComponent<WarpAltarManager>();
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Successfully added the Container component to " + childName);
-            }
-            else
-            {
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName +
-                                                                           ") not found in parent GameObject (" + parentGameObject + ")");
+                //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName + ") not found in parent GameObject (" + parentGameObject + ")");
             }
         }
         
@@ -146,119 +116,20 @@ public class WarpLootManager: MonoBehaviour
             {
                 if (rootObject.name.StartsWith("loot_chest_wood_interior") && rootObject.transform.position.y >= 5000)
                 {
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
+                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
                     Container container = rootObject.GetComponent<Container>();
                     if (container != null)
                     {
                         locationInteriorContainers.Add(container);
-                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found container with name: " + container);
+                        //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found container with name: " + container);
                     }
                     else
                     {
-                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the container from object with name: " + rootObject);
+                        //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the container from object with name: " + rootObject);
                     }
                 }
             }
 
             return locationInteriorContainers;
         }
-
-        public static void UpdateInteriorContainerTier(List<Container> containers, int tier)
-        {
-            var itemNames = interiorLoot1;
-            switch (tier)
-            {
-                case 1:
-                    itemNames = interiorLoot1;
-                    break;
-                case 2:
-                    itemNames = interiorLoot2;
-                    break;
-                case 3:
-                    itemNames = interiorLoot3;
-                    break;
-                default:
-                    itemNames = interiorLoot1;
-                    break;
-            }
-
-            foreach (var container in containers)
-            {
-                var dropTable = container.m_defaultItems;
-                
-                dropTable.m_oneOfEach = true;
-                dropTable.m_dropMin = 1;
-                dropTable.m_dropMax = 1;
-                
-                foreach (var itemName in itemNames)
-                {
-
-                    GameObject itemPrefab = PrefabManager.Cache.GetPrefab<GameObject>(itemName);
-
-                    if (itemPrefab != null)
-                    {
-                        DropTable.DropData dropData = new DropTable.DropData
-                        {
-                            m_item = itemPrefab,
-                            m_stackMin = 3,
-                            m_stackMax = 8,
-                            m_weight = 1.0f,
-                            m_dontScale = false 
-                        };
-                        
-                        dropTable.m_drops.Add(dropData);
-                    }
-                    else
-                    {
-                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName +
-                            " not found");
-                    }
-
-                    container.AddDefaultItems();
-                }
-
-            }
-        }
-        
-        public static void ShrinkChests(List<Container> containers, int tier)
-        {
-            int chestsToShrink = 2;
-            
-            switch (tier)
-            {
-                case 1:
-                    chestsToShrink = 2;
-                    break;
-                case 2:
-                    chestsToShrink = 1;
-                    break;
-                case 3:
-                    chestsToShrink = 0;
-                    break;
-                default:
-                    chestsToShrink = 2;
-                    break;
-            }
-            
-            foreach (var container in containers)
-            {
-                if (chestsToShrink <= 0) break; 
-                if (container.transform != null)
-                {
-                    var parentTransform = container.transform;
-                    var scale = parentTransform.localScale;
-                    scale.x = 0.01f;
-                    scale.y = 0.01f;
-                    scale.z = 0.01f;
-                    parentTransform.localScale = scale;
-                    chestsToShrink--;
-                }
-                else
-                {
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Parent transform for container not found");
-                }
-            }
-            
-        }
-        
 }

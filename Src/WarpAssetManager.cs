@@ -17,7 +17,7 @@ public static class WarpAssetManager
     public static AssetBundle assetBundle;
     public static GameObject MWL_RuinsCathedral1_GameObject;
     
-    public static bool LoadAssets()
+    public static void LoadAssets()
     {
         assetBundle = AssetUtils.LoadAssetBundleFromResources(
             BundleName,
@@ -26,10 +26,8 @@ public static class WarpAssetManager
         if (assetBundle == null)
         {
             Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to load asset bundle with name: " + BundleName);
-            return false;
+           
         }
-        
-        return LoadGameObject();
     }
 
     private static bool LoadGameObject()

@@ -1,0 +1,18 @@
+MWL_RuinsCathedral1:
+  interiorLootTier1:
+    - Copper
+    - Tin
+    - Ruby
+  interiorLootTier2:
+    - Copper
+    - Bronze
+    - SurtlingCore
+  interiorLootTier3:
+    - Bronze
+    - IronScrap
+    - SurtlingCore
+  exteriorLoot:
+    - FineWood
+    - Bronze
+    - CopperOre
+    - Coins

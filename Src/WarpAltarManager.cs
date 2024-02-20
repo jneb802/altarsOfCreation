@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
 using Jotunn.Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
 namespace Altars_of_Creation;
@@ -17,14 +13,13 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
     private string name = "Offering Box";
     private static Container container;
     
-    //private static Inventory Inventory;
-
-    public string offeringItem = "Coins";
     private static int tierOneItemPrice = Altars_of_CreationPlugin.TierOnePrice.Value;
     private static int tierTwoItemPrice = Altars_of_CreationPlugin.TierTwoPrice.Value;
     private static int tierThreeItemPrice = Altars_of_CreationPlugin.TierThreePrice.Value;
-
-    //public static EffectList altarEffects = new EffectList();
+    
+    public static List<string> interiorLoot1;
+    public static List<string> interiorLoot2;
+    public static List<string> interiorLoot3;
     
     // This method is called when the class starts. It is used to initialize everything required for the class.
     private void Awake()
@@ -38,6 +33,13 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
             container.m_inventory.m_width = 1;
         }
         AddCustomButtonToInventoryGUI();
+    }
+    
+    public static void SetupInteriorLootLists(string locationName, string yamlContent)
+    {
+        interiorLoot1 = WarpLootManager.LoadLootConfig(locationName, "interiorLootTier1", yamlContent);
+        interiorLoot2 = WarpLootManager.LoadLootConfig(locationName, "interiorLootTier2", yamlContent);
+        interiorLoot3 = WarpLootManager.LoadLootConfig(locationName, "interiorLootTier3", yamlContent);
     }
     
     private static int CalculateInteriorTier(Inventory inventory)
@@ -126,8 +128,8 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
             Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to get interior creature spawners");
             return;
         }
-        WarpLootManager.UpdateInteriorContainerTier(interiorContainerList, tier);
-        WarpLootManager.ShrinkChests(interiorContainerList,tier);
+        UpdateInteriorContainerTier(interiorContainerList, tier);
+        ShrinkChests(interiorContainerList,tier);
 
         MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "Offering Accepted");
     }
@@ -194,6 +196,122 @@ public class WarpAltarManager: MonoBehaviour, Hoverable, Interactable
             buttonRect.anchoredPosition = new Vector2(217, 100); // Moves the button to the right (x) and down (y)
         }
     }
+    
+    public static void AddOfferingManagerToChildContainer(GameObject parentGameObject, string childName)
+    {
+        // Find the child GameObject by name
+        Transform childTransform = parentGameObject.transform.Find(childName);
+
+        // Check if the child was found
+        if (childTransform != null)
+        {
+            childTransform.gameObject.AddComponent<WarpAltarManager>();
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Successfully added the Container component to " + childName);
+        }
+        else
+        {
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName +
+            ") not found in parent GameObject (" + parentGameObject + ")");
+        }
+    }
+    
+    public static void UpdateInteriorContainerTier(List<Container> containers, int tier)
+        {
+            var itemNames = interiorLoot1;
+            switch (tier)
+            {
+                case 1:
+                    itemNames = interiorLoot1;
+                    break;
+                case 2:
+                    itemNames = interiorLoot2;
+                    break;
+                case 3:
+                    itemNames = interiorLoot3;
+                    break;
+                default:
+                    itemNames = interiorLoot1;
+                    break;
+            }
+
+            foreach (var container in containers)
+            {
+                var dropTable = container.m_defaultItems;
+                
+                dropTable.m_oneOfEach = true;
+                dropTable.m_dropMin = 1;
+                dropTable.m_dropMax = 1;
+                
+                foreach (var itemName in itemNames)
+                {
+
+                    GameObject itemPrefab = PrefabManager.Cache.GetPrefab<GameObject>(itemName);
+
+                    if (itemPrefab != null)
+                    {
+                        DropTable.DropData dropData = new DropTable.DropData
+                        {
+                            m_item = itemPrefab,
+                            m_stackMin = 3,
+                            m_stackMax = 8,
+                            m_weight = 1.0f,
+                            m_dontScale = false 
+                        };
+                        
+                        dropTable.m_drops.Add(dropData);
+                    }
+                    else
+                    {
+                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName +
+                            " not found");
+                    }
+
+                    container.AddDefaultItems();
+                }
+
+            }
+        }
+        
+        public static void ShrinkChests(List<Container> containers, int tier)
+        {
+            int chestsToShrink = 2;
+            
+            switch (tier)
+            {
+                case 1:
+                    chestsToShrink = 2;
+                    break;
+                case 2:
+                    chestsToShrink = 1;
+                    break;
+                case 3:
+                    chestsToShrink = 0;
+                    break;
+                default:
+                    chestsToShrink = 2;
+                    break;
+            }
+            
+            foreach (var container in containers)
+            {
+                if (chestsToShrink <= 0) break; 
+                if (container.transform != null)
+                {
+                    var parentTransform = container.transform;
+                    var scale = parentTransform.localScale;
+                    scale.x = 0.01f;
+                    scale.y = 0.01f;
+                    scale.z = 0.01f;
+                    parentTransform.localScale = scale;
+                    chestsToShrink--;
+                }
+                else
+                {
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Parent transform for container not found");
+                }
+            }
+            
+        }
 
     public bool UseItem(Humanoid user, ItemDrop.ItemData item)
     {

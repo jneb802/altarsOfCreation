@@ -58,8 +58,6 @@ public class WarpItemManager
         ItemManager.Instance.AddItem(churchKeyItem);
         
         Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("ChurchKey has been added");
-        
-        AddChurchKeytoChild(WarpAssetManager.MWL_RuinsCathedral1_GameObject.gameObject.transform.FindDeepChild("Blueprint").gameObject, "churchgate");
     }
     
     [HarmonyPatch(typeof(Door), nameof(Door.Interact))]

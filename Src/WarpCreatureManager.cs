@@ -16,9 +16,6 @@ namespace Altars_of_Creation;
 
 public static class WarpCreatureManager
 {
-    private static string bepinexConfigFolderPath = Paths.ConfigPath;
-    private static string creaturesYAMLFilePath = @"C:\\Users\\jneb8\\RiderProjects\\Altars of Creation\\CreatureLists\\warpalicious.MWL_Altars_of_Creation_Creatures.yml";
-    
     public static GameObject GetCreaturePrefab(string prefabName)
     {   
         GameObject creaturePrefab = PrefabManager.Cache.GetPrefab<GameObject>(prefabName);
@@ -28,7 +25,7 @@ public static class WarpCreatureManager
         }
         else
         {
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab not found for name:" + prefabName);
+            //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab not found for name:" + prefabName);
             return null;
         }
     }
@@ -44,7 +41,7 @@ public static class WarpCreatureManager
             if (spawner.transform.parent != null && spawner.transform.position.y <= 5000)
             {
                 locationExteriorSpawners.Add(spawner);
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Exterior creature spawner found in " + location + "with name: " + spawner.transform.parent.name);
+                //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Exterior creature spawner found in " + location + "with name: " + spawner.transform.parent.name);
             }
         }
 
@@ -62,7 +59,7 @@ public static class WarpCreatureManager
             if (spawner.transform.parent != null && spawner.transform.position.y >= 5000)
             {
                 locationInteriorSpawners.Add(spawner);
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Interior creature spawner found in " + location + " with name: " + spawner.transform.parent.name);
+                //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Interior creature spawner found in " + location + " with name: " + spawner.transform.parent.name);
             }
         }
 
@@ -79,16 +76,16 @@ public static class WarpCreatureManager
         {
             if (rootObject.name.StartsWith("MWL_RuinsCathedral1_Interior_Spawner") && rootObject.transform.position.y >= 5000 && !locationInteriorSpawners.Any(spawner => spawner.gameObject.name == rootObject.name))
             {
-                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
+                //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
                 CreatureSpawner spawner = rootObject.GetComponent<CreatureSpawner>();
                 if (spawner != null)
                 {
                     locationInteriorSpawners.Add(spawner);
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found interior creature spawner with name: " + spawner);
+                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found interior creature spawner with name: " + spawner);
                 }
                 else
                 {
-                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the creature spawner from object with name: " + rootObject);
+                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the creature spawner from object with name: " + rootObject);
                 }
             }
         }
@@ -96,22 +93,13 @@ public static class WarpCreatureManager
         return locationInteriorSpawners;
     }
     
-    public static List<string> CreateCreatureList(string locationName, int creatureCount)
+    public static List<string> CreateCreatureList(string locationName, int creatureCount, string yamlContent)
     {
         List<string> locationCreatureList = new List<string>();
         
-        if (Altars_of_CreationPlugin.UseCustomLocationCreatureListYAML.Value == Altars_of_CreationPlugin.Toggle.On)
-        {
-            creaturesYAMLFilePath = Path.Combine(bepinexConfigFolderPath, "warpalicious.MWL_Altars_of_Creation_Creatures.yml");
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("Successfully loaded warpalicious.MWL_Altars_of_Creation_Creatures file from BepinEx config folder");
-        }
-        else
-        {
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogInfo("warpalicious.MWL_Altars_of_Creation_Creatures file was not found in BepinEx config folder");
-        }
-        
         // Read the YAML content from the file
-        string yamlContent = File.ReadAllText(creaturesYAMLFilePath);
+        //string yamlContent = yamlDocument.ToString()
+        //string yamlContent = File.ReadAllText(filePath);
         if (yamlContent != null)
         {
             // Load the YAML stream
@@ -150,12 +138,12 @@ public static class WarpCreatureManager
         if (creature != null)
         {
             creatureSpawner.m_creaturePrefab = creature;
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Creature with name " + creaturePrefab + " was added to " + creatureSpawner.transform.parent.name);
+            //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Creature with name " + creaturePrefab + " was added to " + creatureSpawner.transform.parent.name);
  
         }
         else
         {
-            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Creature not found for name: " + creaturePrefab);
+            //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Creature not found for name: " + creaturePrefab);
  
         }
     }
