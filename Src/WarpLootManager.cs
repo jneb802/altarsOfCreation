@@ -40,7 +40,7 @@ public class WarpLootManager: MonoBehaviour
         }
         else
         {
-            //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to find location with name: " + locationName + " in LocationInteriorLootList");
+            Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Failed to find location with name: " + locationName + " in LocationInteriorLootList");
         }
 
         return lootList;
@@ -74,7 +74,7 @@ public class WarpLootManager: MonoBehaviour
                 }
                 else
                 {
-                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName + " not found");
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Prefab for " + itemName + " not found");
                 }
             }
 
@@ -102,7 +102,7 @@ public class WarpLootManager: MonoBehaviour
             }
             else
             {
-                //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName + ") not found in parent GameObject (" + parentGameObject + ")");
+                Altars_of_CreationPlugin.Altars_of_CreationLogger.LogError("Child GameObject (" + childName + ") not found in parent GameObject (" + parentGameObject + ")");
             }
         }
         
@@ -116,16 +116,16 @@ public class WarpLootManager: MonoBehaviour
             {
                 if (rootObject.name.StartsWith("loot_chest_wood_interior") && rootObject.transform.position.y >= 5000)
                 {
-                    //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
+                    Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found object with name matching criteria. Name: " + rootObject.name);
                     Container container = rootObject.GetComponent<Container>();
                     if (container != null)
                     {
                         locationInteriorContainers.Add(container);
-                        //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found container with name: " + container);
+                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Found container with name: " + container);
                     }
                     else
                     {
-                        //Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the container from object with name: " + rootObject);
+                        Altars_of_CreationPlugin.Altars_of_CreationLogger.LogDebug("Failed the container from object with name: " + rootObject);
                     }
                 }
             }
